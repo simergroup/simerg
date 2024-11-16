@@ -6,7 +6,7 @@
   <br />
   
   [![Next.js](https://img.shields.io/badge/Built%20with-Next.js%2014-000000?style=plastic&logo=next.js&logoColor=white)](https://nextjs.org/)
-  [![React](https://img.shields.io/badge/Powered%20by-React%2018-%2361DAFB?style=plastic&logo=react&logoColor=white)](https://reactjs.org/)
+  [![React](https://img.shields.io/badge/Powered%20by-React%2018-%000000?style=plastic&logo=react&logoColor=white)](https://reactjs.org/)
   [![TailwindCSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-%2338B2AC?style=plastic&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
   [![NextAuth](https://img.shields.io/badge/Secured%20by-NextAuth.js-%23000000?style=plastic&logo=auth0&logoColor=white)](https://next-auth.js.org/)
   [![EmailJS](https://img.shields.io/badge/Emails%20via-EmailJS-%23FF6B6B?style=plastic&logo=gmail&logoColor=white)](https://www.emailjs.com/)
