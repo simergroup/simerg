@@ -1,5 +1,5 @@
 // INITIATIVES IMAGES
-import postGraduation from "../public/initiatives/initiativesimage.png";
+import postGraduation from "../public/Initiatives/initiativesimage.png";
 // TEAM IMAGES
 import asantos from "../public/Team/asantos.png";
 import tribeiro from "../public/Team/tribeiro.png";
