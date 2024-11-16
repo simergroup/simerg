@@ -17,14 +17,9 @@ export default function ContactPage() {
     e.preventDefault();
 
     emailjs
-      .sendForm(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-        form.current,
-        {
-          publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
-        }
-      )
+      .sendForm(process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID, process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID, form.current, {
+        publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+      })
       .then(
         () => {
           setName("");
@@ -40,21 +35,19 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="space-y-4 md:flex">
-      <div className="p-4 md:max-w-lg">
+    <div className="p-4 space-y-4 md:flex">
+      <div className=" md:max-w-lg">
         <h1
           className={`${oxanium.className} text-yellow-600 uppercase text-3xl tracking-wider p-2 font-bold text-center`}
         >
           Contact us
         </h1>
-        <h1
-          className={`${oxanium.className} text-neutral-300 uppercase text-lg p-2 font-bold`}
-        >
+        <h1 className={`${oxanium.className} text-neutral-300 uppercase text-lg p-2 font-bold`}>
           Need to get in touch with us? We{"'"}d love to hear from you.
         </h1>
         <p className="p-2 text-justify text-neutral-300">
-          If you have any questions or suggestions, feel free to contact us. Our
-          team is ready to get involved and answer your needs! We
+          If you have any questions or suggestions, feel free to contact us. Our team is ready to get involved and
+          answer your needs! We
           {"'"}ll get to you shortly.
         </p>
         <div className="px-2 space-y-5 text-neutral-300">
@@ -81,7 +74,7 @@ export default function ContactPage() {
                   href="mailto: enhance.research.group@gmail.com"
                   className="text-yellow-600 underline underline-offset-2"
                 >
-                  enhance.research.group@gmail.com
+                  simeresearchgroup@gmail.com
                 </a>
               </div>
             </div>
@@ -99,17 +92,11 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center p-2 mx-auto w-72 md:w-96">
-        <h1
-          className={`${oxanium.className} text-yellow-600 uppercase text-2xl p-2 font-bold`}
-        >
+      <div className="flex flex-col justify-center p-2 mx-auto md:w-96">
+        <h1 className={`${oxanium.className} text-yellow-600 uppercase text-2xl p-2 font-bold`}>
           Ready to get started?
         </h1>
-        <form
-          ref={form}
-          onSubmit={sendEmail}
-          className="flex flex-col p-2 space-y-2"
-        >
+        <form ref={form} onSubmit={sendEmail} className="flex flex-col p-2 space-y-2">
           <input
             type="text"
             name="name"
