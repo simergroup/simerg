@@ -1,26 +1,41 @@
-# SIMERG
+<h1 align="center">SIMERG - Sports, Innovation, Management and Esports Research Group</h1>
 
 <div align="center">
   <img src="public/Logos/SIMERG.png" alt="SIMERG Logo" width="400"/>
   <br />
   <br />
   
-  [![Next.js](https://img.shields.io/badge/Built%20with-Next.js%2014-000000?style=plastic&logo=next.js&logoColor=white)](https://nextjs.org/)
-  [![React](https://img.shields.io/badge/Powered%20by-React%2018-%000000?style=plastic&logo=react&logoColor=white)](https://reactjs.org/)
-  [![TailwindCSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-%2338B2AC?style=plastic&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![NextAuth](https://img.shields.io/badge/Secured%20by-NextAuth.js-%23000000?style=plastic&logo=auth0&logoColor=white)](https://next-auth.js.org/)
-  [![EmailJS](https://img.shields.io/badge/Emails%20via-EmailJS-%23FF6B6B?style=plastic&logo=gmail&logoColor=white)](https://www.emailjs.com/)
+  [![Next.js](https://img.shields.io/badge/Built_with-Next.js_14-000000?style=plastic&logo=next.js&logoColor=white)](https://nextjs.org/)
+  [![React](https://img.shields.io/badge/Powered_by-React_18-%2361DAFB?style=plastic&logo=react&logoColor=white)](https://reactjs.org/)
+  [![TailwindCSS](https://img.shields.io/badge/Styled_with-Tailwind_CSS-%2338B2AC?style=plastic&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![NextAuth](https://img.shields.io/badge/Secured_by-NextAuth.js-%23000000?style=plastic&logo=auth0&logoColor=white)](https://next-auth.js.org/)
+  [![EmailJS](https://img.shields.io/badge/Emails_via-EmailJS-%23FF6B6B?style=plastic&logo=gmail&logoColor=white)](https://www.emailjs.com/)
   
   [![License](https://img.shields.io/badge/License-MIT-%23A31F34?style=plastic)](LICENSE)
-  [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-%23000000?style=plastic&logo=vercel&logoColor=white)](https://vercel.com/)
+  [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-%23000000?style=plastic&logo=vercel&logoColor=white)](https://vercel.com/)
 </div>
+
+## 📋 Table of Contents
+
+- [🚀 About](#-about)
+- [🎯 Mission](#-mission)
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📝 Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [📁 Project Structure](#-project-structure)
+- [🔒 Authentication](#-authentication)
+- [🗺️ Roadmap](#️-roadmap)
+- [📄 License](#-license)
+- [🙏 Acknowledgments](#-acknowledgments)
 
 ## 🚀 About
 
 SIMERG (Sports Innovation Management and Esports Research Group) represents a dynamic research group specializied in sports and esports management through innovative information systems and cutting-edge research. Covering a diverse variety of topics our group brings together a team of researchers with a wide range of expertise. Our collaborative approach enables us to explore these themes comprehensively and develop innovative solutions across various domains within sports and esports management.
 Our platform serves as a central hub for researchers, practitioners, and students interested in the intersection of sports and esports management, technology, and academic research.
 
-### 🎯 Mission
+## 🎯 Mission
 
 **Our mission is to:**
 
@@ -156,7 +171,7 @@ To configure authentication:
    - GitHub: `http://localhost:3000/api/auth/callback/github`
    - Google: `http://localhost:3000/api/auth/callback/google`
 
-## 🎯 Roadmap
+## 🗺️ Roadmap
 
 - [ ] Dark/Light mode implementation
 - [ ] Internationalization support
@@ -165,16 +180,6 @@ To configure authentication:
 - [ ] Improved mobile navigation
 - [ ] Page-specific metadata
 - [ ] Performance optimizations
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📄 License
 
