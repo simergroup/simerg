@@ -5,23 +5,24 @@
   <br />
   <br />
   
-  [![Next.js](https://img.shields.io/badge/Built%20with-Next.js%2014-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-  [![React](https://img.shields.io/badge/Powered%20by-React%2018-%2361DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-  [![TailwindCSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-%2338B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![NextAuth](https://img.shields.io/badge/Secured%20by-NextAuth.js-%23000000?style=for-the-badge&logo=auth0&logoColor=white)](https://next-auth.js.org/)
-  [![EmailJS](https://img.shields.io/badge/Emails%20via-EmailJS-%23FF6B6B?style=for-the-badge&logo=gmail&logoColor=white)](https://www.emailjs.com/)
+  [![Next.js](https://img.shields.io/badge/Built%20with-Next.js%2014-000000?style=plastic&logo=next.js&logoColor=white)](https://nextjs.org/)
+  [![React](https://img.shields.io/badge/Powered%20by-React%2018-%2361DAFB?style=plastic&logo=react&logoColor=black)](https://reactjs.org/)
+  [![TailwindCSS](https://img.shields.io/badge/Styled%20with-Tailwind%20CSS-%2338B2AC?style=plastic&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![NextAuth](https://img.shields.io/badge/Secured%20by-NextAuth.js-%23000000?style=plastic&logo=auth0&logoColor=white)](https://next-auth.js.org/)
+  [![EmailJS](https://img.shields.io/badge/Emails%20via-EmailJS-%23FF6B6B?style=plastic&logo=gmail&logoColor=white)](https://www.emailjs.com/)
   
-  [![License](https://img.shields.io/badge/License-MIT-%23A31F34?style=for-the-badge)](LICENSE)
-  [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-%23000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+  [![License](https://img.shields.io/badge/License-MIT-%23A31F34?style=plastic)](LICENSE)
+  [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-%23000000?style=plastic&logo=vercel&logoColor=white)](https://vercel.com/)
 </div>
 
 ## 🚀 About
 
-SIMERG (Sport Information Management and Enhanced Research Group) is a pioneering research initiative dedicated to advancing the field of sports management through innovative information systems and cutting-edge research. Our platform serves as a central hub for researchers, practitioners, and students interested in the intersection of sports management, technology, and academic research.
+SIMERG (Sports Innovation Management and Esports Research Group) represents a dynamic research group specializied in sports and esports management through innovative information systems and cutting-edge research. Covering a diverse variety of topics our group brings together a team of researchers with a wide range of expertise. Our collaborative approach enables us to explore these themes comprehensively and develop innovative solutions across various domains within sports and esports management.
+Our platform serves as a central hub for researchers, practitioners, and students interested in the intersection of sports and esports management, technology, and academic research.
 
 ### 🎯 Mission
 
-Our mission is to:
+**Our mission is to:**
 
 - Foster collaboration between academic researchers and sports industry professionals
 - Develop and implement innovative solutions for sports management challenges
@@ -52,7 +53,7 @@ Through our platform, we aim to create a dynamic ecosystem where research meets 
 - **Icons:** React Icons
 - **Notifications:** React Hot Toast
 
-## 🚀 Getting Started
+## 📝 Getting Started
 
 ### Prerequisites
 
@@ -87,18 +88,27 @@ cp .env.local.example .env.local
 
 ```env
 # EmailJS Configuration
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
 
-# Auth Providers
-GITHUB_ID=your_github_id
-GITHUB_SECRET=your_github_secret
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+# EmailJS
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
 
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_secret_key
+# Next Auth
+NEXTAUTH_URL=
+NEXTAUTH_SECRET=
+
+# Github Provider
+GITHUB_ID=
+GITHUB_SECRET=
+
+# Google Provider
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
 ```
 
 5. Run the development server
@@ -115,12 +125,13 @@ Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
 ```
 simerg/
-├── app/                    # Next.js 14 app directory
-│   ├── api/               # API routes
-│   ├── context/           # React context providers
-│   └── [...routes]/       # Page routes
-├── components/            # React components
+├── app/                  # Next.js 14 app directory
+│   ├── api/              # API routes
+│   ├── context/          # React context providers
+│   └── [...routes]/      # Page routes
+├── components/           # React components
 ├── public/
+│   ├── Initiatives/      # Initiatives images
 │   ├── Logos/            # Project logos
 │   ├── News/             # News images
 │   ├── Partners/         # Partner logos
@@ -160,9 +171,9 @@ To configure authentication:
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ## 📄 License
