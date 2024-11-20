@@ -30,6 +30,12 @@
 - [📄 License](#-license)
 - [🙏 Acknowledgments](#-acknowledgments)
 
+---
+
+### Check out our [🗺️ Roadmap](./ROADMAP.md) for upcoming tasks and improvements!
+
+---
+
 ## 🚀 About
 
 SIMERG (Sports Innovation Management and Esports Research Group) represents a dynamic research group specializied in sports and esports management through innovative information systems and cutting-edge research. Covering a diverse variety of topics our group brings together a team of researchers with a wide range of expertise. Our collaborative approach enables us to explore these themes comprehensively and develop innovative solutions across various domains within sports and esports management.
@@ -170,16 +176,6 @@ To configure authentication:
 3. Configure callback URLs in your OAuth providers:
    - GitHub: `http://localhost:3000/api/auth/callback/github`
    - Google: `http://localhost:3000/api/auth/callback/google`
-
-## 🗺️ Roadmap
-
-- [ ] Dark/Light mode implementation
-- [ ] Internationalization support
-- [ ] Enhanced team member project linking
-- [ ] PDF integration for master's projects
-- [ ] Improved mobile navigation
-- [ ] Page-specific metadata
-- [ ] Performance optimizations
 
 ## 📄 License
 
