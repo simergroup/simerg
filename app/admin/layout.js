@@ -16,8 +16,17 @@ export default function AdminLayout({ children }) {
             <NavLink href="/admin" exact>
               Dashboard
             </NavLink>
+            <NavLink href="/admin/initiatives">
+              Initiatives
+            </NavLink>
+            <NavLink href="/admin/team">
+              Team
+            </NavLink>
             <NavLink href="/admin/projects">
               Projects
+            </NavLink>
+            <NavLink href="/admin/partners">
+              Partners
             </NavLink>
             <NavLink href="/admin/news">
               News

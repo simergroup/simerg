@@ -15,6 +15,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "pro-bel.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
