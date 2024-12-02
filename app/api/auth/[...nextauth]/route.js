@@ -5,14 +5,14 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    // GithubProvider({
+    //   clientId: process.env.GITHUB_ID,
+    //   clientSecret: process.env.GITHUB_SECRET,
+    // }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    // }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -20,7 +20,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const user = { id: 1, name: "Test", email: "test@test.com", password: "test" };
+        const user = { id: 1, name: "Simerg", email: "simerearchgroup@gmail.com", password: "SIMERG1997!" };
 
         if (credentials?.email === user.email && credentials?.password === user.password) {
           return user;

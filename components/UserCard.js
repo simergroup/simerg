@@ -17,10 +17,20 @@ export default function UserCard({ user }) {
       height={50}
       priority={true}
     />
-  ) : null;
+  ) : (
+    <Image
+      src="https://pro-bel.com/wp-content/uploads/2019/11/blank-avatar-1-450x450.png"
+      className="rounded-full"
+      alt="Profile Pic"
+      width={50}
+      height={50}
+      priority={true}
+    />
+  );
 
   return (
     <div className="flex items-center space-x-4 border-red w-fit">
+      {userImage}
       <div>
         <p className="text-white">{greeting}</p>
         <p className="text-white">{emailDisplay}</p>
@@ -28,7 +38,6 @@ export default function UserCard({ user }) {
           Logout
         </button>
       </div>
-      {userImage}
     </div>
   );
 }

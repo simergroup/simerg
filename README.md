@@ -7,12 +7,14 @@
   
   [![Next.js](https://img.shields.io/badge/Built_with-Next.js_14-000000?style=plastic&logo=next.js&logoColor=white)](https://nextjs.org/)
   [![React](https://img.shields.io/badge/Powered_by-React_18-%2361DAFB?style=plastic&logo=react&logoColor=white)](https://reactjs.org/)
-  [![TailwindCSS](https://img.shields.io/badge/Styled_with-Tailwind_CSS-%2338B2AC?style=plastic&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![Node.js](https://img.shields.io/badge/Node.js-v18.0.0-%23339933?style=plastic&logo=node.js&logoColor=white)](https://nodejs.org/)
   [![NextAuth](https://img.shields.io/badge/Secured_by-NextAuth.js-%23000000?style=plastic&logo=auth0&logoColor=white)](https://next-auth.js.org/)
+  [![TailwindCSS](https://img.shields.io/badge/Styled_with-Tailwind_CSS-%2338B2AC?style=plastic&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
   [![EmailJS](https://img.shields.io/badge/Emails_via-EmailJS-%23FF6B6B?style=plastic&logo=gmail&logoColor=white)](https://www.emailjs.com/)
-  
-  [![License](https://img.shields.io/badge/License-MIT-%23A31F34?style=plastic)](LICENSE)
-  [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-%23000000?style=plastic&logo=vercel&logoColor=white)](https://vercel.com/)
+
+[![License](https://img.shields.io/badge/License-MIT-%23A31F34?style=plastic)](LICENSE)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-%23000000?style=plastic&logo=vercel&logoColor=white)](https://vercel.com/)
+
 </div>
 
 ## 📋 Table of Contents
@@ -30,11 +32,7 @@
 - [📄 License](#-license)
 - [🙏 Acknowledgments](#-acknowledgments)
 
----
-
 ### Check out our [🗺️ Roadmap](./ROADMAP.md) for upcoming tasks and improvements!
-
----
 
 ## 🚀 About
 
@@ -130,6 +128,8 @@ GITHUB_SECRET=
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 
+# MongoDB
+MONGODB_URI=
 ```
 
 5. Run the development server
@@ -176,14 +176,3 @@ To configure authentication:
 3. Configure callback URLs in your OAuth providers:
    - GitHub: `http://localhost:3000/api/auth/callback/github`
    - Google: `http://localhost:3000/api/auth/callback/google`
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [NextAuth.js](https://next-auth.js.org/)
-- [EmailJS](https://www.emailjs.com/)

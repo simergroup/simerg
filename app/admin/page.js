@@ -13,24 +13,29 @@ export default async function AdminPage() {
 
   const adminSections = [
     {
-      title: 'Projects',
-      description: 'Manage research, master, and PhD projects',
-      href: '/admin/projects',
-    },
-    {
-      title: 'News',
-      description: 'Manage news articles and updates',
-      href: '/admin/news',
-    },
-    {
       title: 'Initiatives',
       description: 'Manage research and educational initiatives',
       href: '/admin/initiatives',
     },
     {
+      title: 'Team',
+      description: 'Manage team members and collaborators',
+      href: '/admin/team',
+    },
+    {
+      title: 'Projects',
+      description: 'Manage research, master, and PhD projects',
+      href: '/admin/projects',
+    },
+    {
       title: 'Partners',
       description: 'Manage academic and industry partnerships',
       href: '/admin/partners',
+    },
+    {
+      title: 'News',
+      description: 'Manage news articles and updates',
+      href: '/admin/news',
     },
   ];
 
