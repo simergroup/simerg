@@ -1,8 +1,8 @@
 name: Auto Merge Dependabot PRs
 
 on:
-  pull_request:
-    types: [review_requested, review, labeled]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   auto-merge:
