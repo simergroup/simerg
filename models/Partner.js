@@ -1,35 +1,69 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const PartnerSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide a name'],
-    maxlength: [200, 'Name cannot be more than 200 characters']
-  },
-  description: {
-    type: String,
-    required: [true, 'Please provide a description']
-  },
-  logo: {
-    type: String,
-    required: false
-  },
-  website: {
-    type: String,
-    required: false
-  },
-  partnershipType: {
-    type: String,
-    enum: ['strategic', 'technical', 'community', 'other'],
-    default: 'other'
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  }
-}, {
-  timestamps: true
-});
+// Delete the model if it exists to prevent cached schemas
+if (mongoose.models.Partner) {
+	delete mongoose.models.Partner;
+}
 
-export default mongoose.models.Partner || mongoose.model('Partner', PartnerSchema);
+const PartnerSchema = new mongoose.Schema(
+	{
+		name: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		description: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		logo: {
+			type: String,
+			trim: true,
+		},
+		website: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		partnershipType: {
+			type: String,
+			required: true,
+			enum: ["Academic", "Industry", "Research", "Funding", "Other"],
+		},
+		contactPerson: {
+			name: {
+				type: String,
+				required: true,
+				trim: true,
+			},
+			email: {
+				type: String,
+				required: true,
+				trim: true,
+			},
+			phone: {
+				type: String,
+				trim: true,
+			},
+		},
+		startDate: {
+			type: Date,
+			required: true,
+		},
+		endDate: {
+			type: Date,
+		},
+		status: {
+			type: String,
+			required: true,
+			enum: ["Active", "Inactive", "Pending"],
+			default: "Active",
+		},
+	},
+	{
+		timestamps: true,
+	}
+);
+
+export default mongoose.models.Partner || mongoose.model("Partner", PartnerSchema);

@@ -1,33 +1,53 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const InitiativeSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, 'Please provide a title'],
-    maxlength: [200, 'Title cannot be more than 200 characters']
-  },
-  description: {
-    type: String,
-    required: [true, 'Please provide a description']
-  },
-  image: {
-    type: String,
-    required: false
-  },
-  category: {
-    type: String,
-    required: false
-  },
-  goals: [{
-    type: String
-  }],
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  }
-}, {
-  timestamps: true
-});
+// Delete the model if it exists to prevent cached schemas
+if (mongoose.models.Initiative) {
+	delete mongoose.models.Initiative;
+}
 
-export default mongoose.models.Initiative || mongoose.model('Initiative', InitiativeSchema);
+const InitiativeSchema = new mongoose.Schema(
+	{
+		title: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		description: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		category: {
+			type: String,
+			required: true,
+			enum: ["Research", "Education", "Community", "Other"],
+		},
+		image: {
+			type: String,
+			trim: true,
+		},
+		goals: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		startDate: {
+			type: Date,
+			required: true,
+		},
+		endDate: {
+			type: Date,
+		},
+		status: {
+			type: String,
+			required: true,
+			enum: ["Active", "Completed", "On Hold", "Planned"],
+			default: "Active",
+		},
+	},
+	{
+		timestamps: true,
+	}
+);
+
+export default mongoose.models.Initiative || mongoose.model("Initiative", InitiativeSchema);
