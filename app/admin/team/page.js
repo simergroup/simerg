@@ -12,8 +12,8 @@ export default async function AdminTeamPage() {
   return (
     <div className="h-full">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Manage Projects</h1>
-        <p className="text-gray-600">Create, edit, and manage research projects.</p>
+        <h1 className="text-2xl font-bold text-yellow-600">Manage Team Members</h1>
+        <p className="text-gray-300">Create, edit, and manage team members.</p>
       </div>
       <AdminTeamList />
     </div>
