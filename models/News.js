@@ -1,34 +1,53 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const NewsSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, 'Please provide a title'],
-    maxlength: [200, 'Title cannot be more than 200 characters']
-  },
-  content: {
-    type: String,
-    required: [true, 'Please provide content']
-  },
-  image: {
-    type: String,
-    required: false
-  },
-  author: {
-    type: String,
-    required: false
-  },
-  publishedAt: {
-    type: Date,
-    default: Date.now
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  }
-}, {
-  timestamps: true
-});
+// Delete the model if it exists to prevent cached schemas
+if (mongoose.models.News) {
+	delete mongoose.models.News;
+}
 
-export default mongoose.models.News || mongoose.model('News', NewsSchema);
+const NewsSchema = new mongoose.Schema(
+	{
+		title: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		content: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		author: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		image: {
+			type: String,
+			trim: true,
+		},
+		publishDate: {
+			type: Date,
+			required: true,
+			default: Date.now,
+		},
+		tags: {
+			type: [String],
+			validate: {
+				validator: function (v) {
+					return v && v.length > 0;
+				},
+				message: "At least one tag is required",
+			},
+		},
+		featured: {
+			type: Boolean,
+			default: false,
+		},
+	},
+	{
+		timestamps: true,
+	}
+);
+
+export default mongoose.models.News || mongoose.model("News", NewsSchema);
