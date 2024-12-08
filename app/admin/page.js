@@ -40,19 +40,19 @@ export default async function AdminPage() {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="p-4 mx-auto max-w-4xl">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-yellow-600">Admin Dashboard</h1>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray-300">
           Signed in as: {session.user?.email}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {adminSections.map((section) => (
           <Card key={section.href} className="p-4">
-            <h2 className="text-xl font-semibold mb-2">{section.title}</h2>
-            <p className="text-gray-600 mb-4">{section.description}</p>
+            <h2 className="mb-2 text-xl font-semibold">{section.title}</h2>
+            <p className="mb-4 text-gray-600">{section.description}</p>
             <Link href={section.href}>
               <Button>
                 Manage {section.title}
