@@ -4,8 +4,6 @@
 
 ### Projects tab:
 
-**Clicking the project card on the right side should open the project page**
-
 - Master category:
 
   - Probably add pdf preview or image preview
