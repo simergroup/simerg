@@ -22,7 +22,19 @@ export async function POST(request) {
 
     await dbConnect();
     const data = await request.json();
-    const initiative = await Initiative.create(data);
+    const { title, description, image, category, status, startDate, endDate, goals, website, tags } = data;
+    const initiative = await Initiative.create({
+      title,
+      description,
+      image,
+      category,
+      status,
+      startDate,
+      endDate,
+      goals,
+      website,
+      tags,
+    });
     return NextResponse.json(initiative, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

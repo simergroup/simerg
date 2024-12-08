@@ -13,7 +13,7 @@ export default async function AdminPartnersPage() {
 		<div className="h-full">
 			<div className="mb-6">
 				<h1 className="text-2xl font-bold text-yellow-600">Manage Partners</h1>
-				<p className="text-gray-300">Create, edit, and manage partners.</p>
+				<p className="text-neutral-300">Create, edit, and manage partners.</p>
 			</div>
 			<AdminPartnersList />
 		</div>

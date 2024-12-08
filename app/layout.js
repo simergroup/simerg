@@ -7,23 +7,23 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import AuthProvider from "./context/AuthProvider";
 
 export const metadata = {
-  title: "SIMERG - SPORTS, INNOVATION, MANAGEMENT AND ESPORTS RESEARCH GROUP",
-  description: "SIMERG - SPORTS, INNOVATION, MANAGEMENT AND ESPORTS RESEARCH GROUP",
+	title: "SIMERG - SPORTS, INNOVATION, MANAGEMENT AND ESPORTS RESEARCH GROUP",
+	description: "SIMERG - SPORTS, INNOVATION, MANAGEMENT AND ESPORTS RESEARCH GROUP",
 };
 
 export default function RootLayout({ children }) {
-  return (
-    <html className={roboto.className} lang="en">
-      <body className="md:flex-col md:flex md:h-dvh bg-neutral-900">
-        <AuthProvider>
-          <Navigation />
-          <div className="flex items-center justify-center flex-1 max-w-screen-xl mx-auto">
-            <Toaster position="bottom-right" />
-            {children}
-            <SpeedInsights />
-          </div>
-        </AuthProvider>
-      </body>
-    </html>
-  );
+	return (
+		<html className={roboto.className} lang="en">
+			<body className="bg-neutral-900 md:flex md:h-dvh md:flex-col">
+				<AuthProvider>
+					<Navigation />
+					<div className="mx-auto flex max-w-screen-xl flex-1 items-center justify-center">
+						<Toaster position="bottom-right" />
+						{children}
+						<SpeedInsights />
+					</div>
+				</AuthProvider>
+			</body>
+		</html>
+	);
 }

@@ -6,7 +6,7 @@ import { getServerSession } from 'next-auth';
 export async function GET(request, { params }) {
   try {
     await dbConnect();
-    const initiative = await Initiative.findById(params.id);
+    const initiative = await Initiative.findOne({ slug: params.slug });
     if (!initiative) {
       return NextResponse.json({ error: 'Initiative not found' }, { status: 404 });
     }
@@ -25,10 +25,14 @@ export async function PUT(request, { params }) {
 
     await dbConnect();
     const data = await request.json();
-    const initiative = await Initiative.findByIdAndUpdate(params.id, data, {
-      new: true,
-      runValidators: true,
-    });
+    const initiative = await Initiative.findOneAndUpdate(
+      { slug: params.slug },
+      data,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     if (!initiative) {
       return NextResponse.json({ error: 'Initiative not found' }, { status: 404 });
     }
@@ -46,7 +50,7 @@ export async function DELETE(request, { params }) {
     }
 
     await dbConnect();
-    const initiative = await Initiative.findByIdAndDelete(params.id);
+    const initiative = await Initiative.findOneAndDelete({ slug: params.slug });
     if (!initiative) {
       return NextResponse.json({ error: 'Initiative not found' }, { status: 404 });
     }
