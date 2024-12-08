@@ -180,7 +180,9 @@ export default function AdminNewsList() {
 						</div>
 
 						<div>
-							<label className="mb-1 block text-sm font-medium text-neutral-300">Publish Date</label>
+							<label className="mb-1 block text-sm font-medium text-neutral-300">
+								Publish Date
+							</label>
 							<Input
 								type="date"
 								value={formData.publishDate}
@@ -200,19 +202,6 @@ export default function AdminNewsList() {
 								required
 								className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-1.5 text-sm text-neutral-300 placeholder-neutral-500 focus:border-yellow-600 focus:outline-none focus:ring-1 focus:ring-yellow-600"
 							/>
-						</div>
-
-						<div className="flex items-center gap-2">
-							<input
-								type="checkbox"
-								id="featured"
-								checked={formData.featured}
-								onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-								className="text-primary focus:ring-primary h-4 w-4 rounded border-neutral-700 bg-neutral-900"
-							/>
-							<label htmlFor="featured" className="text-sm">
-								Featured Article
-							</label>
 						</div>
 
 						<button
@@ -263,11 +252,7 @@ export default function AdminNewsList() {
 												<p className="text-sm text-neutral-400">{news.author}</p>
 											</div>
 											<div className="flex gap-2">
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleEdit(news)}
-												>
+												<Button variant="outline" size="sm" onClick={() => handleEdit(news)}>
 													Edit
 												</Button>
 												<Button
@@ -284,7 +269,7 @@ export default function AdminNewsList() {
 										</div>
 										<p className="mt-2 text-sm text-neutral-300">{news.content}</p>
 										{news.tags?.length > 0 && (
-											<div className="mt-1 flex flex-wrap gap-1.5">
+											<div className="mt-2 grid gap-1 text-sm text-neutral-400">
 												{news.tags.map((tag, index) => (
 													<span
 														key={index}

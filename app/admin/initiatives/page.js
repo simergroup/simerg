@@ -13,7 +13,7 @@ export default async function AdminInitiativesPage() {
 		<div className="h-full">
 			<div className="mb-6">
 				<h1 className="text-2xl font-bold text-yellow-600">Manage Initiatives</h1>
-				<p className="text-gray-300">Create, edit, and manage initiatives.</p>
+				<p className="text-neutral-300">Create, edit, and manage initiatives.</p>
 			</div>
 			<AdminInitiativesList />
 		</div>

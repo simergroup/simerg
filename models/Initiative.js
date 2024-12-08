@@ -5,6 +5,17 @@ if (mongoose.models.Initiative) {
 	delete mongoose.models.Initiative;
 }
 
+// Function to generate slug from title
+function generateSlug(title) {
+	return title
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+		.replace(/[^\w\s-]/g, "") // Remove non-word chars
+		.replace(/\s+/g, "-") // Replace spaces with -
+		.replace(/^-+|-+$/g, ""); // Remove leading/trailing -
+}
+
 const InitiativeSchema = new mongoose.Schema(
 	{
 		title: {
@@ -17,37 +28,42 @@ const InitiativeSchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 		},
-		category: {
-			type: String,
-			required: true,
-			enum: ["Research", "Education", "Community", "Other"],
-		},
 		image: {
 			type: String,
 			trim: true,
 		},
-		goals: {
+		website: {
 			type: String,
-			required: true,
 			trim: true,
 		},
-		startDate: {
-			type: Date,
-			required: true,
-		},
-		endDate: {
-			type: Date,
-		},
-		status: {
+		slug: {
 			type: String,
-			required: true,
-			enum: ["Active", "Completed", "On Hold", "Planned"],
-			default: "Active",
+			unique: true,
 		},
 	},
 	{
 		timestamps: true,
 	}
 );
+
+// Pre-save middleware to generate slug
+InitiativeSchema.pre("save", async function (next) {
+	if (!this.slug || this.isModified("title")) {
+		let baseSlug = generateSlug(this.title);
+		let slug = baseSlug;
+		let counter = 1;
+
+		// Check for existing slugs and append counter if needed
+		while (true) {
+			const existingDoc = await this.constructor.findOne({ slug, _id: { $ne: this._id } });
+			if (!existingDoc) break;
+			slug = `${baseSlug}-${counter}`;
+			counter++;
+		}
+
+		this.slug = slug;
+	}
+	next();
+});
 
 export default mongoose.models.Initiative || mongoose.model("Initiative", InitiativeSchema);

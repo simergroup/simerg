@@ -21,49 +21,20 @@ const PartnerSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 		},
-		website: {
-			type: String,
-			required: true,
-			trim: true,
-		},
-		partnershipType: {
-			type: String,
-			required: true,
-			enum: ["Academic", "Industry", "Research", "Funding", "Other"],
-		},
-		contactPerson: {
-			name: {
-				type: String,
-				required: true,
-				trim: true,
-			},
-			email: {
-				type: String,
-				required: true,
-				trim: true,
-			},
-			phone: {
-				type: String,
-				trim: true,
-			},
-		},
-		startDate: {
-			type: Date,
-			required: true,
-		},
-		endDate: {
-			type: Date,
-		},
-		status: {
-			type: String,
-			required: true,
-			enum: ["Active", "Inactive", "Pending"],
-			default: "Active",
-		},
 	},
 	{
 		timestamps: true,
 	}
 );
+
+// Drop the existing index on slug if it exists
+PartnerSchema.pre("save", async function (next) {
+	try {
+		await mongoose.connection.collections.partners.dropIndex("slug_1");
+	} catch (error) {
+		// Index might not exist, which is fine
+	}
+	next();
+});
 
 export default mongoose.models.Partner || mongoose.model("Partner", PartnerSchema);

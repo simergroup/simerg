@@ -8,12 +8,15 @@ import { Textarea } from "../ui/textarea";
 import { Card } from "../ui/card";
 import { toast } from "react-hot-toast";
 import DeleteConfirmationModal from "../modals/DeleteConfirmationModal";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function AdminInitiativesList() {
 	const { initiatives, createInitiative, updateInitiative, deleteInitiative } = useInitiatives();
 	const [editingId, setEditingId] = useState(null);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [initiativeToDelete, setInitiativeToDelete] = useState(null);
+	const [newKeyword, setNewKeyword] = useState("");
 	const [formData, setFormData] = useState({
 		title: "",
 		description: "",
@@ -23,11 +26,13 @@ export default function AdminInitiativesList() {
 		startDate: "",
 		endDate: "",
 		status: "Active",
+		website: "", // Add website field
 	});
 	const [filters, setFilters] = useState({
 		search: "",
 		category: "",
 	});
+	const router = useRouter();
 
 	const categories = ["Research", "Education", "Community", "Other"];
 	const statuses = ["Active", "Completed", "On Hold", "Planned"];
@@ -63,6 +68,7 @@ export default function AdminInitiativesList() {
 				startDate: "",
 				endDate: "",
 				status: "Active",
+				website: "", // Add website field
 			});
 		} catch (error) {
 			toast.error(error.message || "Something went wrong");
@@ -82,6 +88,7 @@ export default function AdminInitiativesList() {
 				: "",
 			endDate: initiative.endDate ? new Date(initiative.endDate).toISOString().split("T")[0] : "",
 			status: initiative.status,
+			website: initiative.website || "", // Add website field
 		});
 	};
 
@@ -130,6 +137,7 @@ export default function AdminInitiativesList() {
 										startDate: "",
 										endDate: "",
 										status: "Active",
+										website: "", // Add website field
 									});
 								}}
 								className="rounded bg-neutral-700/50 px-2 py-1 text-sm font-medium text-neutral-300 transition-colors hover:bg-neutral-600"
@@ -148,6 +156,7 @@ export default function AdminInitiativesList() {
 								value={formData.title}
 								onChange={(e) => setFormData({ ...formData, title: e.target.value })}
 								required
+								placeholder="Enter initiative title"
 							/>
 						</div>
 
@@ -156,83 +165,29 @@ export default function AdminInitiativesList() {
 							<Textarea
 								value={formData.description}
 								onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+								placeholder="Enter initiative description"
 								required
 							/>
-						</div>
-
-						<div className="grid grid-cols-2 gap-4">
-							<div>
-								<label className="mb-1 block text-sm font-medium text-neutral-300">Category</label>
-								<select
-									value={formData.category}
-									onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-									className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-1.5 text-sm text-neutral-300 focus:border-yellow-600 focus:outline-none focus:ring-1 focus:ring-yellow-600"
-									required
-								>
-									<option value="">Select Category</option>
-									{categories.map((category) => (
-										<option key={category} value={category}>
-											{category}
-										</option>
-									))}
-								</select>
-							</div>
-
-							<div>
-								<label className="mb-1 block text-sm font-medium text-neutral-300">Status</label>
-								<select
-									value={formData.status}
-									onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-									className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-1.5 text-sm text-neutral-300 focus:border-yellow-600 focus:outline-none focus:ring-1 focus:ring-yellow-600"
-									required
-								>
-									{statuses.map((status) => (
-										<option key={status} value={status}>
-											{status}
-										</option>
-									))}
-								</select>
-							</div>
 						</div>
 
 						<div>
 							<label className="mb-1 block text-sm font-medium text-neutral-300">Image URL</label>
 							<Input
-								type="url"
+								type="text"
 								value={formData.image}
 								onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+								placeholder="Enter initiative image"
 							/>
 						</div>
 
 						<div>
-							<label className="mb-1 block text-sm font-medium text-neutral-300">Goals</label>
-							<Textarea
-								value={formData.goals}
-								onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
-								required
-								placeholder="Enter goals, one per line"
+							<label className="mb-1 block text-sm font-medium text-neutral-300">Website URL</label>
+							<Input
+								type="url"
+								value={formData.website}
+								onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+								placeholder="Enter initiative website URL"
 							/>
-						</div>
-
-						<div className="grid grid-cols-2 gap-4">
-							<div>
-								<label className="mb-1 block text-sm font-medium text-neutral-300">Start Date</label>
-								<Input
-									type="date"
-									value={formData.startDate}
-									onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-									required
-								/>
-							</div>
-
-							<div>
-								<label className="mb-1 block text-sm font-medium text-neutral-300">End Date</label>
-								<Input
-									type="date"
-									value={formData.endDate}
-									onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-								/>
-							</div>
 						</div>
 
 						<button
@@ -249,108 +204,59 @@ export default function AdminInitiativesList() {
 			<div className="flex h-full flex-col overflow-hidden">
 				{/* Fixed Header */}
 				<div>
-					<h2 className="text-lg font-bold text-neutral-300">Initiatives</h2>
-					<div className="mt-4 space-y-4">
-						<Input
+					{/* Search */}
+					<div>
+						<input
 							type="text"
 							placeholder="Search initiatives..."
 							value={filters.search}
 							onChange={(e) => setFilters({ ...filters, search: e.target.value })}
 							className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-1.5 text-sm text-neutral-300 placeholder-neutral-500 focus:border-yellow-600 focus:outline-none focus:ring-1 focus:ring-yellow-600"
 						/>
-
-						<div className="flex gap-4">
-							<div className="flex-1">
-								<label className="mb-1.5 block text-xs font-medium text-neutral-400">Category</label>
-								<select
-									value={filters.category || ""}
-									onChange={(e) => setFilters({ ...filters, category: e.target.value || null })}
-									className="w-full rounded border border-neutral-700 bg-neutral-800/50 px-3 py-1.5 text-sm text-neutral-200 outline-none transition-colors focus:border-yellow-600"
-								>
-									<option value="">All Categories</option>
-									{categories.map((category) => (
-										<option key={category} value={category}>
-											{category}
-										</option>
-									))}
-								</select>
-							</div>
-						</div>
 					</div>
 				</div>
 
 				{/* Initiatives Grid - Scrollable */}
 				<div className="mt-6 flex-1 overflow-y-auto pr-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-neutral-600 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-neutral-800 [&::-webkit-scrollbar]:w-1.5">
 					<div className="grid h-fit gap-2 pb-16">
-						{filteredInitiatives?.map((initiative) => (
-							<Card key={initiative._id} className="p-4">
-								<div className="flex gap-4">
-									{initiative.image && (
-										<img
-											src={initiative.image}
-											alt={initiative.title}
-											className="h-24 w-24 rounded object-contain"
-										/>
-									)}
-									<div className="min-w-0 flex-1">
-										<div className="flex items-start justify-between">
-											<div>
-												<h3 className="break-words pr-4 text-base font-medium text-neutral-200 group-hover:text-yellow-600">
-													{initiative.title}
-												</h3>
-												<p className="text-sm text-neutral-400">
-													{initiative.category} • {initiative.status}
-												</p>
-											</div>
-											<div className="flex gap-2">
-												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => handleEdit(initiative)}
-												>
-													Edit
-												</Button>
-												<Button
-													variant="destructive"
-													size="sm"
-													onClick={() => {
-														setInitiativeToDelete(initiative);
-														setIsDeleteModalOpen(true);
-													}}
-												>
-													Delete
-												</Button>
-											</div>
-										</div>
-										<p className="mt-2 text-sm text-neutral-300">{initiative.description}</p>
-										{initiative.tags?.length > 0 && (
-											<div className="mt-1 flex flex-wrap gap-1.5">
-												{initiative.tags.map((tag, index) => (
-													<span
-														key={index}
-														className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-300"
-													>
-														{tag}
-													</span>
-												))}
-											</div>
-										)}
-										<div className="mt-2 grid gap-1 text-sm text-neutral-400">
-											<p>
-												Started: {new Date(initiative.startDate).toLocaleDateString()}
-												{initiative.endDate && (
-													<span>
-														{" "}
-														• Ends: {new Date(initiative.endDate).toLocaleDateString()}
-													</span>
-												)}
-											</p>
-										</div>
-									</div>
+						{filteredInitiatives.map((initiative) => (
+							<div
+								key={initiative._id}
+								className="group relative flex cursor-pointer items-start justify-between rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-2 transition-all hover:border-yellow-600 hover:bg-neutral-800"
+							>
+								<div 
+									className="min-w-0 flex-1"
+									onClick={() => router.push(`/initiatives/${initiative.slug}`)}
+								>
+									<h3 className="break-words pr-4 text-base font-medium text-neutral-200 group-hover:text-yellow-600">
+										{initiative.title}
+									</h3>
 								</div>
-							</Card>
+
+								<div className="absolute right-3 top-2 flex items-center space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
+									<button
+										onClick={(e) => {
+											e.stopPropagation();
+											handleEdit(initiative);
+										}}
+										className="rounded bg-neutral-700/50 px-1.5 py-0.5 text-xs font-medium text-neutral-300 transition-colors hover:bg-neutral-600"
+									>
+										Edit
+									</button>
+									<button
+										onClick={(e) => {
+											e.stopPropagation();
+											setInitiativeToDelete(initiative);
+											setIsDeleteModalOpen(true);
+										}}
+										className="rounded bg-red-900/30 px-1.5 py-0.5 text-xs font-medium text-red-300 transition-colors hover:bg-red-900/50"
+									>
+										Delete
+									</button>
+								</div>
+							</div>
 						))}
-						{filteredInitiatives?.length === 0 && (
+						{filteredInitiatives.length === 0 && (
 							<div className="rounded-md border border-neutral-700 bg-neutral-800/50 px-3 py-2 text-center text-sm text-neutral-400">
 								No initiatives found
 							</div>
