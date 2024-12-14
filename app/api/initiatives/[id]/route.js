@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import dbConnect from "../../../lib/mongodb";
-import Project from "../../../models/Project";
+import dbConnect from "../../../../lib/mongodb";
+import Initiative from "../../../../models/Initiative";
 import { getServerSession } from "next-auth";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -11,33 +11,45 @@ cloudinary.config({
 	api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
 });
 
-export async function GET() {
-	console.log("GET /api/projects - Fetching projects");
+export async function GET(request, { params }) {
+	const { id } = params;
+
 	try {
 		await dbConnect();
-		console.log("Database connected, fetching projects...");
+		let initiative;
 
-		const projects = await Project.find({}).sort({ createdAt: -1 });
-		console.log(`Found ${projects.length} projects`);
+		// Check if the id is a MongoDB ObjectId
+		if (id.match(/^[0-9a-fA-F]{24}$/)) {
+			initiative = await Initiative.findById(id);
+		} else {
+			// If not a MongoDB ObjectId, treat it as a slug
+			initiative = await Initiative.findOne({ slug: id });
+		}
 
-		return NextResponse.json(projects);
+		if (!initiative) {
+			return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+		}
+
+		return NextResponse.json(initiative);
 	} catch (error) {
-		console.error("GET /api/projects error:", error);
-		console.error("Error stack:", error.stack);
-		return NextResponse.json({ error: error.message }, { status: 500 });
+		console.error("Error in GET /api/initiatives/[id]:", error);
+		return NextResponse.json({ error: "Error fetching initiative" }, { status: 500 });
 	}
 }
 
-export async function POST(request) {
-	console.log("POST /api/projects - Creating new project");
+export async function PUT(request, { params }) {
+	console.log("PUT /api/initiatives/[id] - Updating initiative");
 	try {
 		const session = await getServerSession();
 		console.log("Auth session:", session);
 
 		if (!session) {
-			console.warn("Unauthorized attempt to create project");
+			console.warn("Unauthorized attempt to update initiative");
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
+
+		const { id } = params;
+		console.log("Updating initiative with ID:", id);
 
 		await dbConnect();
 		console.log("Database connected");
@@ -110,7 +122,7 @@ export async function POST(request) {
 					cloudinary.uploader
 						.upload_stream(
 							{
-								folder: "projects",
+								folder: "initiatives",
 							},
 							(error, result) => {
 								if (error) {
@@ -132,7 +144,7 @@ export async function POST(request) {
 			}
 		}
 
-		const project = await Project.create({
+		const updateData = {
 			title,
 			slug,
 			description,
@@ -143,14 +155,51 @@ export async function POST(request) {
 			goals,
 			website,
 			...(imageUrl && { image: imageUrl }),
-		});
+		};
 
-		console.log("Project created successfully:", project);
-		return NextResponse.json(project);
+		const initiative = await Initiative.findByIdAndUpdate(
+			id,
+			{ $set: updateData },
+			{ new: true, runValidators: true }
+		);
+
+		if (!initiative) {
+			console.log("Initiative not found:", id);
+			return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+		}
+
+		console.log("Initiative updated successfully:", initiative);
+		return NextResponse.json(initiative);
 	} catch (error) {
-		console.error("Error creating project:", error);
+		console.error("Error updating initiative:", error);
 		return NextResponse.json(
-			{ error: "Error creating project: " + error.message },
+			{ error: "Error updating initiative: " + error.message },
+			{ status: 500 }
+		);
+	}
+}
+
+export async function DELETE(request, { params }) {
+	console.log("DELETE /api/initiatives/[id] - Deleting initiative");
+	try {
+		const session = await getServerSession();
+		if (!session) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
+
+		const { id } = params;
+		await dbConnect();
+
+		const initiative = await Initiative.findByIdAndDelete(id);
+		if (!initiative) {
+			return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+		}
+
+		return NextResponse.json({ message: "Initiative deleted successfully" });
+	} catch (error) {
+		console.error("Error deleting initiative:", error);
+		return NextResponse.json(
+			{ error: "Error deleting initiative: " + error.message },
 			{ status: 500 }
 		);
 	}

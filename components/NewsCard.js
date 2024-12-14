@@ -1,94 +1,97 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
-import { NEWS } from "../utils/data";
+import React, { useState, useEffect } from "react";
 import { oxanium } from "../utils/fonts";
-import { FullscreenImage } from "./FullscreenImage"; // Importando a função
+import Image from "next/image";
 
 export default function NewsCard({ slug }) {
-  const newsItem = NEWS.find((item) => item.slug === slug);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [fullscreenImage, setFullscreenImage] = useState("");
+	const [newsItem, setNewsItem] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [selectedImage, setSelectedImage] = useState(0);
 
-  const handleImageClick = (src) => {
-    setFullscreenImage(src);
-    setIsFullscreen(true);
-  };
+	useEffect(() => {
+		const fetchNews = async () => {
+			try {
+				const res = await fetch(`/api/news/${slug}`);
+				if (!res.ok) throw new Error("Failed to fetch news");
+				const data = await res.json();
+				setNewsItem(data);
+			} catch (error) {
+				console.error("Error fetching news:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
 
-  const closeFullscreen = () => {
-    setIsFullscreen(false);
-    setFullscreenImage("");
-  };
+		if (slug) {
+			fetchNews();
+		}
+	}, [slug]);
 
-  if (!newsItem) {
-    return <div>News item not found</div>;
-  }
+	if (loading) {
+		return <div className="text-center text-neutral-300">Loading...</div>;
+	}
 
-  return (
-    <div className="flex flex-col max-w-3xl p-4 mx-auto text-neutral-300">
-      <h1
-        className={`${oxanium.className} text-2xl text-yellow-600 font-bold text-center uppercase tracking-wide p-2 mb-4`}
-      >
-        {newsItem.title}
-      </h1>
-      <p className="mb-6 text-sm text-center text-neutral-400">
-        {new Date(newsItem.date).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-      </p>
-      <div className="text-justify">
-        {typeof newsItem.content === "string" ? (
-          <p className="indent-4">{newsItem.content}</p>
-        ) : (
-          Object.entries(newsItem.content).map(([key, paragraph], index) => (
-            <React.Fragment key={key}>
-              <p className="mb-4 indent-4">{paragraph}</p>
-              {index === 0 &&
-                newsItem.images &&
-                newsItem.images[0] && ( // Exibe a primeira imagem após o primeiro parágrafo
-                  <div className="relative w-full mb-4">
-                    <Image
-                      src={newsItem.images[0]}
-                      alt={`${newsItem.title} - Image 1`}
-                      layout="responsive"
-                      width={400} // Largura base ajustada
-                      height={250} // Altura base ajustada
-                      objectFit="cover"
-                      className="w-full h-auto max-w-md mx-auto rounded-lg cursor-pointer"
-                      onClick={() => handleImageClick(newsItem.images[0])}
-                    />
-                  </div>
-                )}
-              {index === 2 &&
-                newsItem.images &&
-                newsItem.images[1] && ( // Exibe a segunda imagem após o terceiro parágrafo
-                  <div className="relative w-full mb-4">
-                    <Image
-                      src={newsItem.images[1]}
-                      alt={`${newsItem.title} - Image 2`}
-                      layout="responsive"
-                      width={400} // Largura base ajustada
-                      height={250} // Altura base ajustada
-                      objectFit="cover"
-                      className="w-full h-auto max-w-md mx-auto rounded-lg cursor-pointer"
-                      onClick={() => handleImageClick(newsItem.images[1])}
-                    />
-                  </div>
-                )}
-            </React.Fragment>
-          ))
-        )}
-      </div>
-      {isFullscreen && (
-        <FullscreenImage
-          src={fullscreenImage}
-          alt="Fullscreen Image"
-          onClose={closeFullscreen}
-        />
-      )}
-    </div>
-  );
+	if (!newsItem) {
+		return <div className="text-center text-neutral-300">News item not found</div>;
+	}
+
+	return (
+		<div className="mx-auto max-w-3xl p-4">
+			<h1
+				className={`${oxanium.className} mb-4 text-center text-3xl font-bold uppercase tracking-wide text-yellow-600`}
+			>
+				{newsItem.title}
+			</h1>
+			<div className="mb-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
+				{new Date(newsItem.publishDate).toLocaleDateString("en-US", {
+					year: "numeric",
+					month: "long",
+					day: "numeric",
+				})}
+			</div>
+
+			{newsItem.images && newsItem.images.length > 0 && (
+				<div className="mb-8">
+					<div className="relative aspect-video w-full overflow-hidden rounded-lg">
+						<Image
+							src={newsItem.images[selectedImage]}
+							alt={`Image ${selectedImage + 1} for ${newsItem.title}`}
+							fill
+							className="object-contain"
+							priority
+						/>
+					</div>
+					{newsItem.images.length > 1 && (
+						<div className="mt-4 flex justify-center gap-2">
+							{newsItem.images.map((image, index) => (
+								<button
+									key={index}
+									onClick={() => setSelectedImage(index)}
+									className={`relative h-16 w-16 overflow-hidden rounded-lg border-2 transition-all ${
+										selectedImage === index
+											? "border-yellow-600"
+											: "border-neutral-700 hover:border-yellow-500"
+									}`}
+								>
+									<Image
+										src={image}
+										alt={`Thumbnail ${index + 1}`}
+										fill
+										className="object-cover"
+									/>
+								</button>
+							))}
+						</div>
+					)}
+				</div>
+			)}
+
+			<div className="prose prose-invert mx-auto max-w-none">
+				<div className="whitespace-pre-wrap text-justify text-neutral-300">
+					{newsItem.content}
+				</div>
+			</div>
+		</div>
+	);
 }

@@ -17,32 +17,29 @@ const NewsSchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 		},
-		author: {
-			type: String,
-			required: true,
-			trim: true,
-		},
-		image: {
-			type: String,
-			trim: true,
+		images: {
+			type: [String],
+			validate: {
+				validator: function (v) {
+					return v.length <= 4;
+				},
+				message: "Cannot have more than 4 images",
+			},
 		},
 		publishDate: {
 			type: Date,
 			required: true,
 			default: Date.now,
 		},
-		tags: {
-			type: [String],
-			validate: {
-				validator: function (v) {
-					return v && v.length > 0;
-				},
-				message: "At least one tag is required",
-			},
-		},
 		featured: {
 			type: Boolean,
 			default: false,
+		},
+		slug: {
+			type: String,
+			required: true,
+			unique: true,
+			trim: true,
 		},
 	},
 	{
@@ -50,4 +47,5 @@ const NewsSchema = new mongoose.Schema(
 	}
 );
 
-export default mongoose.models.News || mongoose.model("News", NewsSchema);
+const News = mongoose.model("News", NewsSchema);
+export default News;

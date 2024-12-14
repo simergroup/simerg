@@ -16,7 +16,15 @@ export function usePartners() {
 
   const createPartner = async (partnerData) => {
     try {
-      const data = await api.post('/api/partners', partnerData);
+      // If partnerData is already FormData, use it directly
+      const formData = partnerData instanceof FormData ? 
+        partnerData : 
+        Object.entries(partnerData).reduce((fd, [key, value]) => {
+          fd.append(key, value);
+          return fd;
+        }, new FormData());
+
+      const data = await api.post('/api/partners', formData);
       setPartners([data, ...partners]);
       return data;
     } catch (error) {
@@ -27,7 +35,15 @@ export function usePartners() {
 
   const updatePartner = async (id, partnerData) => {
     try {
-      const data = await api.put(`/api/partners/${id}`, partnerData);
+      // If partnerData is already FormData, use it directly
+      const formData = partnerData instanceof FormData ? 
+        partnerData : 
+        Object.entries(partnerData).reduce((fd, [key, value]) => {
+          fd.append(key, value);
+          return fd;
+        }, new FormData());
+
+      const data = await api.put(`/api/partners/${id}`, formData);
       setPartners(partners.map(p => p._id === id ? data : p));
       return data;
     } catch (error) {

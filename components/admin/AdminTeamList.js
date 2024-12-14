@@ -6,10 +6,20 @@ import Link from "next/link";
 import { toast } from "react-hot-toast";
 import DeleteConfirmationModal from "../modals/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
+import FileUpload from "../ui/FileUpload";
+import { useTeam } from "../../hooks/useTeam";
 
 export default function AdminTeamList() {
 	const router = useRouter();
-	const [teamMembers, setTeamMembers] = useState([]);
+	const {
+		team,
+		loading,
+		error,
+		createTeamMember,
+		updateTeamMember,
+		deleteTeamMember,
+		refreshTeam,
+	} = useTeam();
 	const [filteredTeamMembers, setFilteredTeamMembers] = useState([]);
 	const [filters, setFilters] = useState({
 		search: "",
@@ -23,16 +33,11 @@ export default function AdminTeamList() {
 	});
 	const [newRole, setNewRole] = useState("");
 	const [editingId, setEditingId] = useState(null);
-	const [isLoading, setIsLoading] = useState(false);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [memberToDelete, setMemberToDelete] = useState(null);
 
 	useEffect(() => {
-		fetchTeamMembers();
-	}, []);
-
-	useEffect(() => {
-		const filtered = teamMembers.filter((member) => {
+		const filtered = team.filter((member) => {
 			const matchesSearch =
 				member.name.toLowerCase().includes(filters.search.toLowerCase()) ||
 				member.roles.some((role) => role.toLowerCase().includes(filters.search.toLowerCase())) ||
@@ -46,20 +51,7 @@ export default function AdminTeamList() {
 		});
 
 		setFilteredTeamMembers(filtered);
-	}, [teamMembers, filters]);
-
-	const fetchTeamMembers = async () => {
-		try {
-			const res = await fetch("/api/team");
-			if (!res.ok) throw new Error("Failed to fetch team members");
-			const data = await res.json();
-			setTeamMembers(data);
-			setFilteredTeamMembers(data);
-		} catch (error) {
-			console.error("Error fetching team members:", error);
-			toast.error("Failed to load team members");
-		}
-	};
+	}, [team, filters]);
 
 	const handleDelete = async (member) => {
 		setMemberToDelete(member);
@@ -69,26 +61,15 @@ export default function AdminTeamList() {
 	const confirmDelete = async () => {
 		if (!memberToDelete) return;
 
-		setIsLoading(true);
 		const loadingToast = toast.loading("Deleting team member...");
 
 		try {
-			const response = await fetch(`/api/team/${memberToDelete._id}`, {
-				method: "DELETE",
-			});
-
-			if (!response.ok) {
-				throw new Error("Failed to delete team member");
-			}
-
-			// Update local state immediately
-			setTeamMembers((prev) => prev.filter((m) => m._id !== memberToDelete._id));
+			await deleteTeamMember(memberToDelete._id);
 			toast.success("Team member deleted successfully", { id: loadingToast });
 		} catch (error) {
 			console.error("Error deleting team member:", error);
 			toast.error("Failed to delete team member", { id: loadingToast });
 		} finally {
-			setIsLoading(false);
 			setDeleteModalOpen(false);
 			setMemberToDelete(null);
 		}
@@ -102,26 +83,27 @@ export default function AdminTeamList() {
 			return;
 		}
 
-		setIsLoading(true);
 		const submitToast = toast.loading(
 			editingId ? "Updating team member..." : "Creating team member..."
 		);
 
 		try {
-			const response = await fetch(editingId ? `/api/team/${editingId}` : "/api/team", {
-				method: editingId ? "PUT" : "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formData),
-			});
-
-			if (!response.ok) {
-				const data = await response.json();
-				throw new Error(data.error || `Failed to ${editingId ? "update" : "create"} team member`);
+			// Create form data
+			const formDataToSend = new FormData();
+			formDataToSend.append("name", formData.name);
+			formDataToSend.append("description", formData.description);
+			formDataToSend.append("roles", JSON.stringify(formData.roles));
+			if (formData.image) {
+				formDataToSend.append("image", formData.image);
 			}
 
-			// Reset form and refresh list
+			if (editingId) {
+				await updateTeamMember(editingId, formDataToSend);
+			} else {
+				await createTeamMember(formDataToSend);
+			}
+
+			// Reset form
 			setFormData({
 				name: "",
 				roles: [],
@@ -130,7 +112,6 @@ export default function AdminTeamList() {
 			});
 			setNewRole("");
 			setEditingId(null);
-			await fetchTeamMembers();
 
 			toast.success(
 				editingId ? "Team member updated successfully" : "Team member created successfully",
@@ -139,8 +120,6 @@ export default function AdminTeamList() {
 		} catch (error) {
 			console.error("Error submitting form:", error);
 			toast.error(error.message, { id: submitToast });
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -180,7 +159,7 @@ export default function AdminTeamList() {
 	};
 
 	const handleCardClick = (memberId) => {
-		const memberIndex = teamMembers.findIndex((member) => member._id === memberId);
+		const memberIndex = team.findIndex((member) => member._id === memberId);
 		router.push(`/team?member=${memberIndex}`);
 	};
 
@@ -278,21 +257,29 @@ export default function AdminTeamList() {
 						</div>
 
 						<div>
-							<label className="mb-1 block text-sm font-medium text-neutral-300">Image URL</label>
-							<input
-								type="url"
-								value={formData.image}
-								onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-								placeholder="Enter image URL"
-								className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-1.5 text-sm text-neutral-300 placeholder-neutral-500 focus:border-yellow-600 focus:outline-none focus:ring-1 focus:ring-yellow-600"
+							<label className="mb-1 block text-sm font-medium text-neutral-300">Image</label>
+							<FileUpload
+								acceptedTypes=".jpg,.jpeg,.png"
+								onUploadSuccess={(url) => setFormData({ ...formData, image: url })}
 							/>
+							{formData.image && (
+								<div className="mt-2">
+									<Image
+										src={formData.image}
+										alt="Preview"
+										width={100}
+										height={100}
+										className="rounded-md object-cover"
+									/>
+								</div>
+							)}
 						</div>
 					</div>
 
 					<div className="mt-6 flex gap-2">
 						<button
 							type="submit"
-							disabled={isLoading}
+							disabled={loading}
 							className="rounded bg-yellow-600 px-4 py-2 text-neutral-900 hover:bg-yellow-700 disabled:opacity-50"
 						>
 							{editingId ? "Update" : "Create"}

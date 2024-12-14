@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Button } from "../../components/ui/button";
-import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/Button";
+import { Card } from "../../components/ui/Card";
 
 export default async function AdminPage() {
 	const session = await getServerSession();
@@ -40,8 +40,8 @@ export default async function AdminPage() {
 	];
 
 	return (
-		<div className="mx-auto max-w-4xl p-4">
-			<div className="mb-6 flex items-center justify-between">
+		<div className="p-4 mx-auto max-w-4xl">
+			<div className="flex justify-between items-center mb-6">
 				<h1 className="text-2xl font-bold text-yellow-600">Admin Dashboard</h1>
 				<div className="text-sm text-neutral-300">Signed in as: {session.user?.email}</div>
 			</div>

@@ -20,23 +20,9 @@
   - Add university field
   - Maybe add co-advisor field
 
-### Initiatives tab:
-
-- [ ] Add image upload feature
-
 ### Team tab:
 
-- [ ] Add image upload feature
 - [ ] Display related projects and link to them
-
-### Partners tab:
-
-- [ ] Add image upload feature
-
-### News tab:
-
-- [ ] Display news from API
-- [ ] Add image upload feature
 
 ### Other:
 
