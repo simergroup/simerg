@@ -35,12 +35,16 @@ const TeamSchema = new mongoose.Schema(
 	{
 		timestamps: true,
 		strict: true,
+		collection: "team", // Explicitly set collection name
 		writeConcern: {
-			w: 1,
+			w: "majority",
 			j: true,
+			wtimeout: 1000,
 		},
+		// Add an index on name for better query performance
+		indexes: [{ name: 1 }],
 	}
 );
 
-const Team = mongoose.model("Team", TeamSchema);
-export default Team;
+// Export as a new model instance
+export default mongoose.model("Team", TeamSchema);

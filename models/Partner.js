@@ -17,9 +17,12 @@ const PartnerSchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 		},
-		logo: {
+		image: {
 			type: String,
 			trim: true,
+		},
+		website: {
+			type: String,
 		},
 	},
 	{
