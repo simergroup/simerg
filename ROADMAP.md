@@ -2,23 +2,13 @@
 
 ### Projects tab:
 
-- **Master category**:
+- **Master & PhD categories**:
 
-  - Probably add pdf preview or image preview
-  - Change advisor to professor advisor (for all categories)
+  - If has pdf, add pdf preview in specific project page
 
 - **Research category**:
 
-  - Maybe remove year field
-  - Remove professor advisor field and derivants
-  - Allow to show between author or researcher
-  - Add website, book, image - not required (and/or mutiple external links)
-
-- **PhD category**:
-
-  - Probably add pdf preview or image preview
-  - Add university field
-  - Maybe add co-advisor field
+  - Enhance image display in specific project page
 
 ### Team tab:
 

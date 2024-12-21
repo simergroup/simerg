@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import DeleteConfirmationModal from "../modals/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import FileUpload from "../ui/FileUpload";
+import ImagePreview from "../ui/ImagePreview";
 import { useTeam } from "../../hooks/useTeam";
 
 export default function AdminTeamList() {
@@ -35,6 +36,7 @@ export default function AdminTeamList() {
 	const [editingId, setEditingId] = useState(null);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [memberToDelete, setMemberToDelete] = useState(null);
+	const fileUploadRef = useRef(null);
 
 	useEffect(() => {
 		const filtered = team.filter((member) => {
@@ -259,20 +261,19 @@ export default function AdminTeamList() {
 						<div>
 							<label className="mb-1 block text-sm font-medium text-neutral-300">Image</label>
 							<FileUpload
+								ref={fileUploadRef}
 								acceptedTypes=".jpg,.jpeg,.png"
+								maxSizeMB={5}
 								onUploadSuccess={(url) => setFormData({ ...formData, image: url })}
+								onReset={() => setFormData({ ...formData, image: "" })}
 							/>
-							{formData.image && (
-								<div className="mt-2">
-									<Image
-										src={formData.image}
-										alt="Preview"
-										width={100}
-										height={100}
-										className="rounded-md object-cover"
-									/>
-								</div>
-							)}
+							<ImagePreview
+								src={formData.image}
+								onRemove={() => {
+									setFormData({ ...formData, image: "" });
+									fileUploadRef.current?.clearInput();
+								}}
+							/>
 						</div>
 					</div>
 
