@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "../../../../lib/mongodb";
-import Initiative from "../../../../models/Initiative";
+import Team from "../../../../models/Team";
 import { getServerSession } from "next-auth";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -11,45 +11,19 @@ cloudinary.config({
 	api_secret: process.env.NEXT_PUBLIC_CLOUDINARY_API_SECRET,
 });
 
-export async function GET(request, { params }) {
-	const { id } = params;
-
-	try {
-		await dbConnect();
-		let initiative;
-
-		// Check if the id is a MongoDB ObjectId
-		if (id.match(/^[0-9a-fA-F]{24}$/)) {
-			initiative = await Initiative.findById(id);
-		} else {
-			// If not a MongoDB ObjectId, treat it as a slug
-			initiative = await Initiative.findOne({ slug: id });
-		}
-
-		if (!initiative) {
-			return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
-		}
-
-		return NextResponse.json(initiative);
-	} catch (error) {
-		console.error("Error in GET /api/initiatives/[id]:", error);
-		return NextResponse.json({ error: "Error fetching initiative" }, { status: 500 });
-	}
-}
-
 export async function PUT(request, { params }) {
-	console.log("PUT /api/initiatives/[id] - Updating initiative");
+	console.log("PUT /api/team/[id] - Updating team member");
 	try {
 		const session = await getServerSession();
 		console.log("Auth session:", session);
 
 		if (!session) {
-			console.warn("Unauthorized attempt to update initiative");
+			console.warn("Unauthorized attempt to update team member");
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
 		const { id } = params;
-		console.log("Updating initiative with ID:", id);
+		console.log("Updating team member with ID:", id);
 
 		await dbConnect();
 		console.log("Database connected");
@@ -65,43 +39,18 @@ export async function PUT(request, { params }) {
 
 		// Parse form data
 		const formData = await request.formData();
-		const title = formData.get("title");
+		const name = formData.get("name");
 		const description = formData.get("description");
-		const category = formData.get("category");
-		const status = formData.get("status");
-		const startDate = formData.get("startDate");
-		const endDate = formData.get("endDate");
-		const goals = JSON.parse(formData.get("goals") || "[]");
-		const website = formData.get("website");
+		const roles = JSON.parse(formData.get("roles") || "[]");
 		const image = formData.get("image");
 
-		console.log("Received form data:", {
-			title,
-			description,
-			category,
-			status,
-			startDate,
-			endDate,
-			goals,
-			website,
-			hasImage: !!image,
-		});
-
-		// Generate slug from title
-		const slug = title
-			.toLowerCase()
-			.normalize("NFD")
-			.replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-			.replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric with hyphens
-			.replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+		console.log("Received form data:", { name, description, roles, hasImage: !!image });
 
 		// Validate required fields
 		const missingFields = [];
-		if (!title) missingFields.push("title");
+		if (!name) missingFields.push("name");
 		if (!description) missingFields.push("description");
-		if (!category) missingFields.push("category");
-		if (!status) missingFields.push("status");
-		if (!startDate) missingFields.push("startDate");
+		if (!roles || roles.length === 0) missingFields.push("roles");
 
 		if (missingFields.length > 0) {
 			console.error("Missing required fields:", missingFields);
@@ -122,7 +71,7 @@ export async function PUT(request, { params }) {
 					cloudinary.uploader
 						.upload_stream(
 							{
-								folder: "initiatives",
+								folder: "team",
 							},
 							(error, result) => {
 								if (error) {
@@ -145,42 +94,36 @@ export async function PUT(request, { params }) {
 		}
 
 		const updateData = {
-			title,
-			slug,
+			name,
 			description,
-			category,
-			status,
-			startDate,
-			endDate,
-			goals,
-			website,
+			roles,
 			...(imageUrl && { image: imageUrl }),
 		};
 
-		const initiative = await Initiative.findByIdAndUpdate(
+		const teamMember = await Team.findByIdAndUpdate(
 			id,
 			{ $set: updateData },
 			{ new: true, runValidators: true }
 		);
 
-		if (!initiative) {
-			console.log("Initiative not found:", id);
-			return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+		if (!teamMember) {
+			console.log("Team member not found:", id);
+			return NextResponse.json({ error: "Team member not found" }, { status: 404 });
 		}
 
-		console.log("Initiative updated successfully:", initiative);
-		return NextResponse.json(initiative);
+		console.log("Team member updated successfully:", teamMember);
+		return NextResponse.json(teamMember);
 	} catch (error) {
-		console.error("Error updating initiative:", error);
+		console.error("Error updating team member:", error);
 		return NextResponse.json(
-			{ error: "Error updating initiative: " + error.message },
+			{ error: "Error updating team member: " + error.message },
 			{ status: 500 }
 		);
 	}
 }
 
 export async function DELETE(request, { params }) {
-	console.log("DELETE /api/initiatives/[id] - Deleting initiative");
+	console.log("DELETE /api/team/[id] - Deleting team member");
 	try {
 		const session = await getServerSession();
 		if (!session) {
@@ -190,16 +133,16 @@ export async function DELETE(request, { params }) {
 		const { id } = params;
 		await dbConnect();
 
-		const initiative = await Initiative.findByIdAndDelete(id);
-		if (!initiative) {
-			return NextResponse.json({ error: "Initiative not found" }, { status: 404 });
+		const teamMember = await Team.findByIdAndDelete(id);
+		if (!teamMember) {
+			return NextResponse.json({ error: "Team member not found" }, { status: 404 });
 		}
 
-		return NextResponse.json({ message: "Initiative deleted successfully" });
+		return NextResponse.json({ message: "Team member deleted successfully" });
 	} catch (error) {
-		console.error("Error deleting initiative:", error);
+		console.error("Error deleting team member:", error);
 		return NextResponse.json(
-			{ error: "Error deleting initiative: " + error.message },
+			{ error: "Error deleting team member: " + error.message },
 			{ status: 500 }
 		);
 	}

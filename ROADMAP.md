@@ -1,36 +1,24 @@
 # 🗺️ Roadmap
 
-## Admin dashboard
-
 ### Projects tab:
 
-**Clicking the project card on the right side should open the project page**
+- **Master & PhD categories**:
 
-- Master category:
+  - If has pdf, add pdf preview in specific project page
 
-  - Probably add pdf preview or image preview
-  - Change advisor to professor advisor (for all categories)
+- **Research category**:
 
-- Research category:
+  - Enhance image display in specific project page
 
-  - Maybe remove year field
-  - Remove professor advisor field and derivants
-  - Allow to show between author or researcher
-  - Add website, book, image - not required (and/or mutiple external links)
+### Team tab:
 
-- PhD category:
+- [ ] Display related projects and link to them
 
-  - Probably add pdf preview or image preview
-  - Add university field
-  - Maybe add co-advisor field
-
-## Other:
+### Other:
 
 - [ ] Dark/Light mode implementation
+- [ ] Improve Navbar
 - [ ] Internationalization support
-- [ ] Enhanced team member project linking
 - [ ] Improved mobile navigation
 - [ ] Page-specific metadata
 - [ ] Performance optimizations
-
-# Keep in mind: 😁

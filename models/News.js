@@ -1,34 +1,51 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const NewsSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, 'Please provide a title'],
-    maxlength: [200, 'Title cannot be more than 200 characters']
-  },
-  content: {
-    type: String,
-    required: [true, 'Please provide content']
-  },
-  image: {
-    type: String,
-    required: false
-  },
-  author: {
-    type: String,
-    required: false
-  },
-  publishedAt: {
-    type: Date,
-    default: Date.now
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  }
-}, {
-  timestamps: true
-});
+// Delete the model if it exists to prevent cached schemas
+if (mongoose.models.News) {
+	delete mongoose.models.News;
+}
 
-export default mongoose.models.News || mongoose.model('News', NewsSchema);
+const NewsSchema = new mongoose.Schema(
+	{
+		title: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		content: {
+			type: String,
+			required: true,
+			trim: true,
+		},
+		images: {
+			type: [String],
+			validate: {
+				validator: function (v) {
+					return v.length <= 4;
+				},
+				message: "Cannot have more than 4 images",
+			},
+		},
+		publishDate: {
+			type: Date,
+			required: true,
+			default: Date.now,
+		},
+		featured: {
+			type: Boolean,
+			default: false,
+		},
+		slug: {
+			type: String,
+			required: true,
+			unique: true,
+			trim: true,
+		},
+	},
+	{
+		timestamps: true,
+	}
+);
+
+const News = mongoose.model("News", NewsSchema);
+export default News;
