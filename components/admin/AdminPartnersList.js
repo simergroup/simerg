@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePartners } from "../../hooks/usePartners";
 import { Button } from "../ui/Button";
 import { toast } from "react-hot-toast";
@@ -8,6 +8,7 @@ import DeleteConfirmationModal from "../modals/DeleteConfirmationModal";
 import Image from "next/image";
 import Link from "next/link";
 import FileUpload from "../ui/FileUpload";
+import ImagePreview from "../ui/ImagePreview"; // Import ImagePreview component
 import { useRouter } from "next/navigation";
 
 export default function AdminPartnersList() {
@@ -26,6 +27,7 @@ export default function AdminPartnersList() {
 	const [filters, setFilters] = useState({
 		search: "",
 	});
+	const fileUploadRef = useRef(null); // Create a ref for FileUpload
 
 	const filteredPartners = partners?.filter((partner) => {
 		const matchesSearch =
@@ -160,21 +162,19 @@ export default function AdminPartnersList() {
 						<div>
 							<label className="block mb-1 text-sm font-medium text-neutral-300">Image</label>
 							<FileUpload
+								ref={fileUploadRef}
 								acceptedTypes=".jpg,.jpeg,.png"
+								maxSizeMB={5}
 								onUploadSuccess={(url) => setFormData({ ...formData, image: url })}
-								currentImage={formData.image}
+								onReset={() => setFormData({ ...formData, image: "" })}
 							/>
-							{formData.image && (
-								<div className="mt-2">
-									<Image
-										src={formData.image}
-										alt="Preview"
-										width={100}
-										height={100}
-										className="object-cover rounded-md"
-									/>
-								</div>
-							)}
+							<ImagePreview
+								src={formData.image}
+								onRemove={() => {
+									setFormData({ ...formData, image: "" });
+									fileUploadRef.current?.clearInput();
+								}}
+							/>
 						</div>
 
 						<div>

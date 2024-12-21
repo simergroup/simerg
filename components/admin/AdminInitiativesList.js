@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useInitiatives } from "../../hooks/useInitiatives";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
@@ -11,6 +11,7 @@ import DeleteConfirmationModal from "../modals/DeleteConfirmationModal";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import FileUpload from "../ui/FileUpload";
+import ImagePreview from "../ui/ImagePreview";
 
 export default function AdminInitiativesList() {
 	const { initiatives, createInitiative, updateInitiative, deleteInitiative } = useInitiatives();
@@ -96,6 +97,8 @@ export default function AdminInitiativesList() {
 		router.push(`/initiatives/${id}`);
 	};
 
+	const fileUploadRef = useRef(null);
+
 	return (
 		<div className="grid grid-cols-2 gap-6 h-full">
 			<DeleteConfirmationModal
@@ -161,8 +164,18 @@ export default function AdminInitiativesList() {
 						<div>
 							<label className="block mb-1 text-sm font-medium text-neutral-300">Image</label>
 							<FileUpload
+								ref={fileUploadRef}
 								acceptedTypes=".jpg,.jpeg,.png"
+								maxSizeMB={5}
 								onUploadSuccess={(url) => setFormData({ ...formData, image: url })}
+								onReset={() => setFormData({ ...formData, image: "" })}
+							/>
+							<ImagePreview
+								src={formData.image}
+								onRemove={() => {
+									setFormData({ ...formData, image: "" });
+									fileUploadRef.current?.clearInput();
+								}}
 							/>
 						</div>
 
