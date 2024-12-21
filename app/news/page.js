@@ -18,7 +18,7 @@ export default async function Page() {
 				>
 					Latest News
 				</h1>
-				<div className="mb-6 text-justify indent-4 text-neutral-300">
+				<div className="mb-6 indent-4 text-neutral-300">
 					<p>
 						On this page, you will find the latest news and updates about the SIMERG and our
 						esports-related activities.

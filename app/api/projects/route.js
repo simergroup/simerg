@@ -42,54 +42,82 @@ export async function POST(request) {
 		await dbConnect();
 		console.log("Database connected");
 
-		// Check content type
+		let projectData;
 		const contentType = request.headers.get("content-type");
-		if (!contentType || !contentType.includes("multipart/form-data")) {
+
+		if (contentType && contentType.includes("application/json")) {
+			projectData = await request.json();
+			console.log("Received JSON data:", projectData);
+		} else if (contentType && contentType.includes("multipart/form-data")) {
+			// Parse form data
+			const formData = await request.formData();
+			projectData = {
+				title: formData.get("title"),
+				description: formData.get("description"),
+				category: formData.get("category"),
+				year: formData.get("year"),
+				keywords: JSON.parse(formData.get("keywords") || "[]"),
+				authors: JSON.parse(formData.get("authors") || "[]"),
+				professorAdvisor: formData.get("professorAdvisor"),
+				university: formData.get("university"),
+				coAdvisor: formData.get("coAdvisor"),
+				authorType: formData.get("authorType"),
+				website: formData.get("website"),
+				book: formData.get("book"),
+				image: formData.get("image"),
+				pdfFile: formData.get("pdfFile"),
+			};
+			console.log("Received form data:", projectData);
+		} else {
 			return NextResponse.json(
-				{ error: "Content type must be multipart/form-data" },
+				{ error: "Content type must be application/json or multipart/form-data" },
 				{ status: 400 }
 			);
 		}
 
-		// Parse form data
-		const formData = await request.formData();
-		const title = formData.get("title");
-		const description = formData.get("description");
-		const category = formData.get("category");
-		const status = formData.get("status");
-		const startDate = formData.get("startDate");
-		const endDate = formData.get("endDate");
-		const goals = JSON.parse(formData.get("goals") || "[]");
-		const website = formData.get("website");
-		const image = formData.get("image");
-
-		console.log("Received form data:", {
-			title,
-			description,
-			category,
-			status,
-			startDate,
-			endDate,
-			goals,
-			website,
-			hasImage: !!image,
-		});
-
-		// Generate slug from title
-		const slug = title
-			.toLowerCase()
-			.normalize("NFD")
-			.replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-			.replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric with hyphens
-			.replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+		// Generate slug from title if not provided
+		if (!projectData.slug) {
+			const title = projectData.title;
+			const slug = title
+				.toLowerCase()
+				.normalize("NFD")
+				.replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+				.replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric with hyphens
+				.replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+			projectData.slug = slug;
+		}
 
 		// Validate required fields
 		const missingFields = [];
-		if (!title) missingFields.push("title");
-		if (!description) missingFields.push("description");
-		if (!category) missingFields.push("category");
-		if (!status) missingFields.push("status");
-		if (!startDate) missingFields.push("startDate");
+		if (!projectData.title) missingFields.push("title");
+		if (!projectData.description) missingFields.push("description");
+		if (!projectData.category) missingFields.push("category");
+		if (!["master", "phd", "research"].includes(projectData.category)) {
+			return NextResponse.json(
+				{ error: "Invalid category. Must be one of: master, phd, research" },
+				{ status: 400 }
+			);
+		}
+
+		// Validate category-specific fields
+		if (projectData.category !== "research") {
+			if (!projectData.year) missingFields.push("year");
+			if (!projectData.professorAdvisor) missingFields.push("professorAdvisor");
+		}
+		if (projectData.category === "phd" && !projectData.university) {
+			missingFields.push("university");
+		}
+		if (projectData.category === "research" && !projectData.authorType) {
+			missingFields.push("authorType");
+		}
+
+		// Validate arrays
+		if (!Array.isArray(projectData.keywords) || projectData.keywords.length === 0) {
+			missingFields.push("keywords");
+		}
+		if (!Array.isArray(projectData.authors) || projectData.authors.length === 0) {
+			missingFields.push("authors");
+		}
 
 		if (missingFields.length > 0) {
 			console.error("Missing required fields:", missingFields);
@@ -101,52 +129,51 @@ export async function POST(request) {
 
 		// Handle image upload if present
 		let imageUrl = null;
-		if (image && image instanceof Blob) {
+		if (projectData.image && projectData.image instanceof Blob) {
 			try {
-				const bytes = await image.arrayBuffer();
+				const bytes = await projectData.image.arrayBuffer();
 				const buffer = Buffer.from(bytes);
 
 				const uploadResponse = await new Promise((resolve, reject) => {
-					cloudinary.uploader
-						.upload_stream(
-							{
-								folder: "projects",
-							},
-							(error, result) => {
-								if (error) {
-									console.error("Cloudinary upload error:", error);
-									reject(error);
-								} else {
-									console.log("Image uploaded successfully:", result.secure_url);
-									resolve(result);
-								}
+					const uploadStream = cloudinary.uploader.upload_stream(
+						{
+							folder: "simerg/projects",
+						},
+						(error, result) => {
+							if (error) {
+								console.error("Cloudinary upload error:", error);
+								reject(error);
+							} else {
+								resolve(result);
 							}
-						)
-						.end(buffer);
+						}
+					);
+
+					uploadStream.end(buffer);
 				});
 
 				imageUrl = uploadResponse.secure_url;
+				console.log("Image uploaded successfully:", imageUrl);
 			} catch (error) {
 				console.error("Error uploading image:", error);
 				return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
 			}
 		}
 
-		const project = await Project.create({
-			title,
-			slug,
-			description,
-			category,
-			status,
-			startDate,
-			endDate,
-			goals,
-			website,
-			...(imageUrl && { image: imageUrl }),
-		});
-
-		console.log("Project created successfully:", project);
-		return NextResponse.json(project);
+		try {
+			const project = await Project.create({
+				...projectData,
+				...(imageUrl && { image: imageUrl }),
+			});
+			console.log("Project created:", project);
+			return NextResponse.json(project);
+		} catch (error) {
+			console.error("Error creating project:", error);
+			return NextResponse.json(
+				{ error: error.message || "Failed to create project" },
+				{ status: 400 }
+			);
+		}
 	} catch (error) {
 		console.error("Error creating project:", error);
 		return NextResponse.json(

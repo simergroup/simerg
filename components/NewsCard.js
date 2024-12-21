@@ -37,13 +37,13 @@ export default function NewsCard({ slug }) {
 	}
 
 	return (
-		<div className="mx-auto max-w-3xl p-4">
+		<div className="p-4 mx-auto max-w-3xl">
 			<h1
 				className={`${oxanium.className} mb-4 text-center text-3xl font-bold uppercase tracking-wide text-yellow-600`}
 			>
 				{newsItem.title}
 			</h1>
-			<div className="mb-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
+			<div className="mb-6 text-sm text-center text-neutral-500 dark:text-neutral-400">
 				{new Date(newsItem.publishDate).toLocaleDateString("en-US", {
 					year: "numeric",
 					month: "long",
@@ -53,7 +53,7 @@ export default function NewsCard({ slug }) {
 
 			{newsItem.images && newsItem.images.length > 0 && (
 				<div className="mb-8">
-					<div className="relative aspect-video w-full overflow-hidden rounded-lg">
+					<div className="overflow-hidden relative w-full rounded-lg aspect-video">
 						<Image
 							src={newsItem.images[selectedImage]}
 							alt={`Image ${selectedImage + 1} for ${newsItem.title}`}
@@ -63,7 +63,7 @@ export default function NewsCard({ slug }) {
 						/>
 					</div>
 					{newsItem.images.length > 1 && (
-						<div className="mt-4 flex justify-center gap-2">
+						<div className="flex gap-2 justify-center mt-4">
 							{newsItem.images.map((image, index) => (
 								<button
 									key={index}
@@ -74,12 +74,7 @@ export default function NewsCard({ slug }) {
 											: "border-neutral-700 hover:border-yellow-500"
 									}`}
 								>
-									<Image
-										src={image}
-										alt={`Thumbnail ${index + 1}`}
-										fill
-										className="object-cover"
-									/>
+									<Image src={image} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
 								</button>
 							))}
 						</div>
@@ -87,10 +82,8 @@ export default function NewsCard({ slug }) {
 				</div>
 			)}
 
-			<div className="prose prose-invert mx-auto max-w-none">
-				<div className="whitespace-pre-wrap text-justify text-neutral-300">
-					{newsItem.content}
-				</div>
+			<div className="mx-auto max-w-none prose prose-invert">
+				<div className="whitespace-pre-wrap text-neutral-300">{newsItem.content}</div>
 			</div>
 		</div>
 	);
