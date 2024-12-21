@@ -1,40 +1,35 @@
 name: Auto Merge Dependabot PRs
 
 on:
-  pull_request:
-    types: [review_requested, review, labeled]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
-  auto-merge:
+  dependabot:
     runs-on: ubuntu-latest
-
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Verify PR is from Dependabot
-        id: dependabot
-        run: echo "::set-output name=is_dependabot::$(echo '${{ github.actor }}' == 'dependabot[bot]')"
-
-      - name: Get PR reviews
-        id: reviews
-        uses: octokit/request-action@v2.x
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
         with:
-          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
-
-      - name: Check for approval
-        id: check_approval
-        run: |
-          echo "::set-output name=approved::$(echo '${{ steps.reviews.outputs.data }}' | jq -r '.[] | select(.state == "APPROVED") | .user.login' | wc -l)"
-      
-      - name: Merge PR
-        if: steps.dependabot.outputs.is_dependabot == 'true' && steps.check_approval.outputs.approved -gt 0
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-              merge_method: 'squash'
-            })
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          
+      - name: Enable auto-merge for Dependabot PRs
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Approve PR
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
