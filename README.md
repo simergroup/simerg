@@ -106,11 +106,6 @@ cp .env.local.example .env.local
 4. Configure your environment variables in `.env.local`:
 
 ```env
-# EmailJS Configuration
-NEXT_PUBLIC_EMAILJS_SERVICE_ID=
-NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
-NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=
-
 # EmailJS
 NEXT_PUBLIC_EMAILJS_SERVICE_ID=
 NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=
@@ -130,6 +125,11 @@ GOOGLE_CLIENT_SECRET=
 
 # MongoDB
 MONGODB_URI=
+
+# Cloudinary
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_API_KEY=
+NEXT_PUBLIC_CLOUDINARY_API_SECRET=
 ```
 
 5. Run the development server
